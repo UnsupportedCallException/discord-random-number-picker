@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랜덤 숫자 골라주는 사이트</title>
+</head>
+<body>
+    
+    <p>시작 숫자</p>
+    <input type="text" placeholder="1 이상" id="mininput">
+    <br>
+    <p>종료 숫자</p>
+    <input type="text" placeholder="100 이하" id="maxinput">
+    <br>
+    <script>
+
+        let lastPickNumber = null;
+
+        function randomNumberPicker(){
+            const min = parseInt(document.getElementById('mininput').value) || 1;
+            const max = parseInt(document.getElementById('maxinput').value) || 100;
+
+            lastPickNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
+            const webhookUrl = document.getElementById('webhook').value;
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: lastPickNumber,
+                    username: '숫자 고르기'
+                }),
+            }).then(res => {
+                if (res.ok) {
+                    alert("성공적으로 전송 완료")
+                }
+            }).catch(err => alert(toString(err)))
+        }
+    </script>
+    <input type="text" placeholder="디스코드 웹훅 url" id="webhook">
+    <br>
+    <button type="button" onclick="randomNumberPicker()">숫자 고르기</button>
+    <style>
+        button {
+            margin-top: 10px;
+        }
+        p {
+            margin: 0;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        #webhook {
+            margin-top: 10px;
+        }
+    </style>
+</body>
+</html>
